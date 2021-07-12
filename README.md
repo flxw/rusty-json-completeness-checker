@@ -1,3 +1,9 @@
+I retired this project after finding that serde already implements this feature:
+https://serde.rs/container-attrs.html#deny_unknown_fields.
+
+Happy coding!
+
+<del>
 # A JSON completeness checker for Rust
 
 This project is a personal playground for coming up with a solution for the following problem:
@@ -10,3 +16,4 @@ This create already protects against the first case, of having a class that take
 However, there is no alerting when the case above happens.
 
 I aspire to turn this code into a plugin, if only for the sake of learning.
+</del>

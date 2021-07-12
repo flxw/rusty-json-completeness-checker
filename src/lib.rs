@@ -41,29 +41,14 @@ pub fn parse_json_and_verify_target_completeness<T: EmptyConstructor + Deseriali
 
 #[cfg(test)]
 mod tests {
-    use crate::parse_json_and_verify_target_completeness;
-    use crate::EmptyConstructor;
     use serde::{Deserialize, Serialize};
 
     #[derive(Serialize, Deserialize, Debug)]
+    #[serde(deny_unknown_fields)]
     struct Person {
         name: String,
         age: u8,
         phones: Vec<String>,
-    }
-
-    impl EmptyConstructor for Person {
-        fn new_empty() -> Self {
-            Person {
-                name: String::new(),
-                age: 0,
-                phones: vec![],
-            }
-        }
-
-        fn attributes() -> Vec<&'static str> {
-            vec!["name", "age", "phones"]
-        }
     }
 
     #[test]
@@ -78,9 +63,8 @@ mod tests {
             ]
         }"#;
 
-        // Parse the string of data into serde_json::Value.
-        let parsed_person = parse_json_and_verify_target_completeness::<Person>(data);
-        assert!(parsed_person.is_ok())
+        let parsing_result: Result<Person, serde_json::Error> = serde_json::from_str(data);
+        assert!(parsing_result.is_ok())
     }
 
     #[test]
@@ -96,8 +80,7 @@ mod tests {
             "status": "wanted"
         }"#;
 
-        // Parse the string of data into serde_json::Value.
-        let parsed_person = parse_json_and_verify_target_completeness::<Person>(data);
-        assert!(parsed_person.is_err());
+        let parsing_result: Result<Person, serde_json::Error> = serde_json::from_str(data);
+        assert!(parsing_result.is_err())
     }
 }
